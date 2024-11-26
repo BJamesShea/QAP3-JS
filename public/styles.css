@@ -88,3 +88,13 @@ body {
   font-size: 25px;
   padding: 10px;
 }
+
+.goBack:link {
+  color: #dfdfdf;
+}
+
+a:link,
+a:visited {
+  color: #dfdfdf;
+  text-decoration: none !important;
+}
