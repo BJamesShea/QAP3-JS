@@ -55,6 +55,15 @@ app.get("/signup", (request, response) => {
 // POST /signup - Allows a user to signup
 app.post("/signup", (request, response) => {
   const { email, username, password } = request.body;
+
+  if (!email || !username || !password) {
+    return response.render("signup", { error: "All fields required!" });
+  }
+
+  const emailInUse = USERS.some((user) => user.email === email);
+  if (emailInUse) {
+    return response.render("signup", { error: "Email already registered!" });
+  }
 });
 
 // GET / - Render index page or redirect to landing if logged in
