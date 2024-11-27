@@ -145,20 +145,22 @@ a:visited {
 }
 
 .card form button {
-  margin-top: 15px;
   width: 80%;
-  padding: 12px;
-  font-size: 16px;
+  padding: 10px;
+  margin-top: 15px;
+  font-size: 14px;
+  font-weight: 500;
+  border-radius: 5px;
   background-color: #dfdfdf;
   color: #222b37;
   border: none;
-  border-radius: 5px;
   cursor: pointer;
-  transition: background-color 0.3s ease-in-out;
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 .card form button:hover {
   background-color: #cfcfcf;
+  transform: scale(1.02);
 }
 
 .card p a {
