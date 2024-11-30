@@ -25,9 +25,7 @@ const USERS = [
     id: 1,
     username: "Kenobi",
     email: "admin@example.com",
-    password: bcrypt.hashSync("admin123", SALT_ROUNDS), //In a database, you'd just store the hashes, but for
-    // our purposes we'll hash these existing users when the
-    // app loads
+    password: bcrypt.hashSync("admin123", SALT_ROUNDS), //saltrounds is funny I feel like i'm in a C tier Angelina Jolie action movie. Saltrounds starring Armie Hammer as the saltman (because he eats people) (you put salt on meat) (im hilarious behave)
     role: "admin",
   },
   {
@@ -73,10 +71,9 @@ app.post("/login", async (request, response) => {
 
 // GET /signup - Render signup form
 app.get("/signup", (request, response) => {
-  response.render("signup");
+  response.render("signup", { error: null });
 });
 
-// POST /signup - Allows a user to signup
 app.post("/signup", async (request, response) => {
   const { email, username, password } = request.body;
 
@@ -84,28 +81,42 @@ app.post("/signup", async (request, response) => {
     return response.render("signup", { error: "All fields are required." });
   }
 
-  const emailInUse = USERS.some((user) => user.email === email);
+  console.log("Checking for duplicate email:", email);
+  console.log("Current USERS array:", USERS);
+
+  const emailInUse = USERS.some(
+    (user) => user.email.toLowerCase() === email.toLowerCase()
+  );
+
+  console.log("Email in use:", emailInUse);
+
   if (emailInUse) {
+    console.log("Duplicate email detected!");
     return response.render("signup", { error: "Email is already registered." });
   }
 
   try {
-    const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS); //saltrounds is funny I feel like i'm in a C tier Angelina Jolie action movie. Saltrounds starring Armie Hammer as the saltman (because he eats people) (you put salt on meat) (im hilarious behave)
+    const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
 
     const newUser = {
       id: USERS.length + 1,
       username,
-      email,
+      email: email.toLowerCase(),
       password: hashedPassword,
       role: "user",
     };
 
     USERS.push(newUser);
 
+    console.log("User added successfully:", newUser);
+    console.log("Updated USERS array:", USERS);
+
     response.redirect("/login");
   } catch (error) {
-    console.log("Error during signup", error);
-    response.render("signup", { error: "An erorr occured. Try again" });
+    console.error("Error during signup:", error);
+    response.render("signup", {
+      error: "An error occurred. Please try again.",
+    });
   }
 });
 
