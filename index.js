@@ -23,7 +23,7 @@ app.set("views", path.join(__dirname, "views"));
 const USERS = [
   {
     id: 1,
-    username: "AdminUser",
+    username: "Kenobi",
     email: "admin@example.com",
     password: bcrypt.hashSync("admin123", SALT_ROUNDS), //In a database, you'd just store the hashes, but for
     // our purposes we'll hash these existing users when the
@@ -118,7 +118,19 @@ app.get("/", (request, response) => {
 });
 
 // GET /landing - Shows a welcome page for users, shows the names of all users if an admin
-app.get("/landing", (request, response) => {});
+app.get("/landing", (request, response) => {
+  const user = request.session.user;
+
+  if (!user) {
+    return response.redirect("/login");
+  }
+
+  if (user.role === "admin") {
+    return response.render("landing", { user, users: USERS });
+  }
+
+  response.render("landing", { user });
+});
 
 // Start server
 app.listen(PORT, () => {
