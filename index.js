@@ -45,7 +45,7 @@ app.get("/login", (request, response) => {
 });
 
 // POST /login - Allows a user to login
-app.post("/login", (request, response) => {});
+app.post("/login", async (request, response) => {});
 
 // GET /signup - Render signup form
 app.get("/signup", (request, response) => {
