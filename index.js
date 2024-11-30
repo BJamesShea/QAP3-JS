@@ -132,6 +132,16 @@ app.get("/landing", (request, response) => {
   response.render("landing", { user });
 });
 
+app.get("/logout", (request, response) => {
+  request.session.destroy((err) => {
+    if (err) {
+      console.error("Error during logout:", err);
+      return response.redirect("/landing");
+    }
+    response.redirect("/");
+  });
+});
+
 // Start server
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
