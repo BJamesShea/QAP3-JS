@@ -45,7 +45,31 @@ app.get("/login", (request, response) => {
 });
 
 // POST /login - Allows a user to login
-app.post("/login", async (request, response) => {});
+app.post("/login", async (request, response) => {
+  const { email, password } = request.body;
+
+  if (!email || !password) {
+    return response.render("login", { error: "Missing fields" });
+  }
+
+  const user = USERS.find((user) => user.email === email);
+  if (!user) {
+    return response.render("login", { error: "Invalid email or password" });
+  }
+
+  const isPassValid = await bcrypt.compare(password, user.password);
+  if (!isPassValid) {
+    return response.render("login", { error: "Invalid email or password" });
+  }
+
+  request.session.user = {
+    id: user.id,
+    username: user.username,
+    role: user.role,
+  };
+
+  response.redirect("/landing");
+});
 
 // GET /signup - Render signup form
 app.get("/signup", (request, response) => {
